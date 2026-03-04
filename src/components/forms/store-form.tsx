@@ -38,6 +38,7 @@ export default function StoreForm({ store, onSubmit, loading }: StoreFormProps) 
       currency: store.currency,
       locale: store.locale,
       active: store.active,
+      tax_rate: store.tax_rate ?? 0,
       settings: JSON.stringify(store.settings || {}, null, 2),
     });
   }, [store, reset]);
@@ -58,6 +59,7 @@ export default function StoreForm({ store, onSubmit, loading }: StoreFormProps) 
       currency: data.currency,
       locale: data.locale,
       active: data.active,
+      tax_rate: data.tax_rate,
       settings,
     });
   };
@@ -87,6 +89,14 @@ export default function StoreForm({ store, onSubmit, loading }: StoreFormProps) 
             {...register("locale")}
           />
         </div>
+        <Input
+          id="tax_rate"
+          label="Tax Rate (%)"
+          type="number"
+          step="0.01"
+          error={errors.tax_rate?.message}
+          {...register("tax_rate", { valueAsNumber: true })}
+        />
         <Controller
           name="active"
           control={control}

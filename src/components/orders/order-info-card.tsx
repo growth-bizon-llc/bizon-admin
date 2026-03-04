@@ -2,6 +2,7 @@
 
 import type { Order } from "@/lib/api/types";
 import { formatDateTime } from "@/lib/utils/format-date";
+import { useStore } from "@/lib/api/hooks/use-store";
 import MoneyDisplay from "@/components/ui/money-display";
 import StatusBadge from "@/components/ui/status-badge";
 
@@ -27,6 +28,9 @@ function AddressBlock({ label, address }: { label: string; address: Record<strin
 }
 
 export default function OrderInfoCard({ order }: OrderInfoCardProps) {
+  const { data: store } = useStore();
+  const taxRate = store?.tax_rate ?? 0;
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -85,7 +89,7 @@ export default function OrderInfoCard({ order }: OrderInfoCardProps) {
           <MoneyDisplay money={order.subtotal} className="text-gray-900" />
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Tax</span>
+          <span className="text-gray-500">Tax{taxRate > 0 ? ` (${taxRate}%)` : ""}</span>
           <MoneyDisplay money={order.tax} className="text-gray-900" />
         </div>
         <div className="flex justify-between text-sm font-semibold">

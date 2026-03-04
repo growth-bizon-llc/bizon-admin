@@ -8,6 +8,7 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { productSchema, type ProductFormData } from "@/lib/validations/product-schema";
 import type { Product, Category, Variant } from "@/lib/api/types";
 import { useCreateVariant, useUpdateVariant, useDeleteVariant } from "@/lib/api/hooks/use-variants";
+import { useStore } from "@/lib/api/hooks/use-store";
 import { useUploadImage, useDeleteImage } from "@/lib/api/hooks/use-images";
 import { dollarsToCents } from "@/lib/utils/format-money";
 import Input from "@/components/ui/input";
@@ -27,6 +28,7 @@ interface ProductFormProps {
 }
 
 export default function ProductForm({ product, categories, onSubmit, loading }: ProductFormProps) {
+  const { data: store } = useStore();
   const [showVariantForm, setShowVariantForm] = useState(false);
   const [editingVariant, setEditingVariant] = useState<Variant | undefined>();
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
@@ -86,6 +88,9 @@ export default function ProductForm({ product, categories, onSubmit, loading }: 
   }, [product, reset]);
 
   const trackInventory = watch("track_inventory");
+  const basePrice = watch("base_price");
+  const taxRate = store?.tax_rate ?? 0;
+  const priceWithTax = basePrice > 0 && taxRate > 0 ? basePrice * (1 + taxRate / 100) : 0;
 
   const categoryOptions = categories.map((c) => ({ value: String(c.id), label: c.name }));
 
@@ -224,6 +229,14 @@ export default function ProductForm({ product, categories, onSubmit, loading }: 
           <Input id="base_price" label="Price ($)" type="number" step="0.01" error={errors.base_price?.message} {...register("base_price", { valueAsNumber: true })} />
           <Input id="compare_at_price" label="Compare at Price ($)" type="number" step="0.01" {...register("compare_at_price", { valueAsNumber: true })} />
         </div>
+        {priceWithTax > 0 && (
+          <div className="mt-4 rounded-md bg-gray-50 px-4 py-3">
+            <p className="text-sm text-gray-600">
+              Price with tax ({taxRate}%):&nbsp;
+              <span className="font-semibold text-gray-900">${priceWithTax.toFixed(2)}</span>
+            </p>
+          </div>
+        )}
       </section>
 
       {/* Organization */}

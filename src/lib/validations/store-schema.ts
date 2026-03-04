@@ -8,6 +8,7 @@ export const storeSchema = z.object({
   currency: z.string().min(1, "Currency is required"),
   locale: z.string().min(1, "Locale is required"),
   active: z.boolean().optional(),
+  tax_rate: z.number().min(0).max(100).optional(),
   settings: z.string().optional(),
 });
 
