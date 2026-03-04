@@ -16,7 +16,7 @@ interface OrderStatusActionsProps {
 export default function OrderStatusActions({ order }: OrderStatusActionsProps) {
   const { canUpdateOrderStatus } = usePermissions();
   const updateStatus = useUpdateOrderStatus();
-  const [confirmAction, setConfirmAction] = useState<{ event: OrderEvent; label: string } | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ event: OrderEvent; label: string; successMessage: string } | null>(null);
 
   if (!canUpdateOrderStatus) return null;
 
@@ -30,7 +30,7 @@ export default function OrderStatusActions({ order }: OrderStatusActionsProps) {
       { id: order.id, event: confirmAction.event },
       {
         onSuccess: () => {
-          toast.success(`Order ${confirmAction.label.toLowerCase()}ed`);
+          toast.success(confirmAction.successMessage);
           setConfirmAction(null);
         },
         onError: () => toast.error("Failed to update order status"),

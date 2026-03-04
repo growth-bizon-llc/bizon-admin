@@ -16,7 +16,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    // Check current store value to avoid race with loadFromStorage
+    if (!useAuthStore.getState().isAuthenticated) {
       router.replace("/login");
     }
   }, [isAuthenticated, router]);

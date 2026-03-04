@@ -114,7 +114,7 @@ export default function ProductForm({ product, categories, onSubmit, loading }: 
     }
 
     if (data.category_id && data.category_id !== "") {
-      payload.category_id = Number(data.category_id);
+      payload.category_id = data.category_id;
     } else {
       payload.category_id = null;
     }

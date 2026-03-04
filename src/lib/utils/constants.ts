@@ -17,21 +17,21 @@ export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
   refunded: "bg-orange-100 text-orange-800",
 };
 
-export const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, { event: OrderEvent; label: string }[]> = {
+export const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, { event: OrderEvent; label: string; successMessage: string }[]> = {
   pending: [
-    { event: "confirm", label: "Confirm" },
-    { event: "cancel", label: "Cancel" },
+    { event: "confirm", label: "Confirm", successMessage: "Order confirmed" },
+    { event: "cancel", label: "Cancel", successMessage: "Order cancelled" },
   ],
   confirmed: [
-    { event: "pay", label: "Mark Paid" },
-    { event: "cancel", label: "Cancel" },
+    { event: "pay", label: "Mark Paid", successMessage: "Order marked as paid" },
+    { event: "cancel", label: "Cancel", successMessage: "Order cancelled" },
   ],
   paid: [
-    { event: "process_order", label: "Process" },
-    { event: "refund", label: "Refund" },
+    { event: "process_order", label: "Process", successMessage: "Order is now processing" },
+    { event: "refund", label: "Refund", successMessage: "Order refunded" },
   ],
-  processing: [{ event: "ship", label: "Ship" }],
-  shipped: [{ event: "deliver", label: "Mark Delivered" }],
+  processing: [{ event: "ship", label: "Ship", successMessage: "Order shipped" }],
+  shipped: [{ event: "deliver", label: "Mark Delivered", successMessage: "Order marked as delivered" }],
   delivered: [],
   cancelled: [],
   refunded: [],
