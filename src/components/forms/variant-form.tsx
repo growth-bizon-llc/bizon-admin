@@ -56,7 +56,7 @@ export default function VariantForm({ variant, onSubmit, onCancel, loading }: Va
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 border rounded-lg p-4 bg-gray-50">
+    <div className="space-y-4 border rounded-lg p-4 bg-gray-50">
       <div className="grid grid-cols-2 gap-4">
         <Input id="variant-name" label="Name" error={errors.name?.message} {...register("name")} />
         <Input id="variant-sku" label="SKU" {...register("sku")} />
@@ -109,8 +109,8 @@ export default function VariantForm({ variant, onSubmit, onCancel, loading }: Va
       </div>
       <div className="flex justify-end gap-3">
         <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
-        <Button type="submit" loading={loading}>{variant ? "Update" : "Add"} Variant</Button>
+        <Button type="button" loading={loading} onClick={handleSubmit(handleFormSubmit)}>{variant ? "Update" : "Add"} Variant</Button>
       </div>
-    </form>
+    </div>
   );
 }
