@@ -37,9 +37,11 @@ export default function LoginPage() {
   const onSubmit = (data: LoginFormData) => {
     loginMutation.mutate(data, {
       onError: (error: unknown) => {
+        const status = (error as { response?: { status?: number } })?.response?.status;
         const message =
-          (error as { response?: { data?: { error?: string } } })?.response?.data?.error ||
-          "Invalid credentials";
+          status === 401 || status === 422
+            ? "Invalid email or password"
+            : "Something went wrong. Please try again.";
         toast.error(message);
       },
     });

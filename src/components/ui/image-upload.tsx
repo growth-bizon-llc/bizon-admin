@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { PhotoIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -21,6 +21,13 @@ export default function ImageUpload({ onFilesSelected, previews = [], onRemovePr
     },
     [onFilesSelected]
   );
+
+  useEffect(() => {
+    const urls = localPreviews;
+    return () => {
+      urls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [localPreviews]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
