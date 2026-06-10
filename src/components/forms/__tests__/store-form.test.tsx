@@ -14,6 +14,7 @@ const mockStore: Store = {
   locale: "en",
   settings: { theme: "dark" },
   active: true,
+  tax_rate: 0,
   created_at: "2024-01-01",
   updated_at: "2024-01-01",
 };
@@ -47,13 +48,6 @@ describe("StoreForm", () => {
     expect(screen.getByText("Save Settings")).toBeInTheDocument();
   });
 
-  it("renders settings JSON", () => {
-    renderWithProviders(
-      <StoreForm store={mockStore} onSubmit={vi.fn()} />
-    );
-    expect(screen.getByLabelText("Settings (JSON)")).toBeInTheDocument();
-  });
-
   it("shows loading state on submit button", () => {
     renderWithProviders(
       <StoreForm store={mockStore} onSubmit={vi.fn()} loading={true} />
@@ -61,7 +55,7 @@ describe("StoreForm", () => {
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
-  it("submits form with parsed settings", async () => {
+  it("submits form data without settings", async () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn();
     renderWithProviders(
@@ -76,29 +70,7 @@ describe("StoreForm", () => {
 
     const payload = onSubmit.mock.calls[0][0];
     expect(payload.name).toBe("My Store");
-    expect(payload.settings).toEqual({ theme: "dark" });
-  });
-
-  it("handles invalid JSON settings gracefully", async () => {
-    const user = userEvent.setup();
-    const onSubmit = vi.fn();
-    renderWithProviders(
-      <StoreForm store={mockStore} onSubmit={onSubmit} />
-    );
-
-    // Clear settings and type invalid JSON
-    const settingsField = screen.getByLabelText("Settings (JSON)");
-    await user.clear(settingsField);
-    await user.type(settingsField, "not valid json");
-
-    await user.click(screen.getByText("Save Settings"));
-
-    await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalled();
-    });
-
-    const payload = onSubmit.mock.calls[0][0];
-    expect(payload.settings).toEqual({});
+    expect(payload.settings).toBeUndefined();
   });
 
   it("renders active toggle", () => {

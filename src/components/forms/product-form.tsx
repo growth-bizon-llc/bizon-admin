@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { productSchema, type ProductFormData } from "@/lib/validations/product-schema";
-import type { Product, Category, Variant } from "@/lib/api/types";
+import type { Product, Category, Variant, ProductImage } from "@/lib/api/types";
 import { useCreateVariant, useUpdateVariant, useDeleteVariant } from "@/lib/api/hooks/use-variants";
 import { useStore } from "@/lib/api/hooks/use-store";
 import { useUploadImage, useDeleteImage } from "@/lib/api/hooks/use-images";
@@ -17,6 +17,8 @@ import Select from "@/components/ui/select";
 import Toggle from "@/components/ui/toggle";
 import Button from "@/components/ui/button";
 import ImageUpload from "@/components/ui/image-upload";
+import SortableImageGrid from "@/components/ui/sortable-image-grid";
+import ImageEditModal from "@/components/ui/image-edit-modal";
 import VariantForm from "./variant-form";
 import type { VariantFormData } from "@/lib/validations/variant-schema";
 
@@ -32,6 +34,7 @@ export default function ProductForm({ product, categories, onSubmit, loading }: 
   const [showVariantForm, setShowVariantForm] = useState(false);
   const [editingVariant, setEditingVariant] = useState<Variant | undefined>();
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [editingImage, setEditingImage] = useState<ProductImage | null>(null);
   const [attrEntries, setAttrEntries] = useState<[string, string][]>(
     product?.custom_attributes ? Object.entries(product.custom_attributes) : []
   );
@@ -281,24 +284,22 @@ export default function ProductForm({ product, categories, onSubmit, loading }: 
       <section className="bg-white rounded-lg border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Images</h2>
         {product?.images && product.images.length > 0 && (
-          <div className="grid grid-cols-4 gap-4 mb-4">
-            {product.images.map((img) => (
-              <div key={img.id} className="relative group">
-                {img.url && (
-                  <img src={img.url} alt={img.alt_text} className="h-24 w-24 object-cover rounded-lg" />
-                )}
-                <button
-                  type="button"
-                  onClick={() => handleDeleteImage(img.id)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <TrashIcon className="h-4 w-4" />
-                </button>
-              </div>
-            ))}
-          </div>
+          <SortableImageGrid
+            images={product.images}
+            productId={product.id}
+            onDelete={handleDeleteImage}
+            onEditAltText={setEditingImage}
+          />
         )}
         <ImageUpload onFilesSelected={(files) => setPendingFiles((prev) => [...prev, ...files])} />
+        {product && (
+          <ImageEditModal
+            image={editingImage}
+            open={editingImage !== null}
+            onClose={() => setEditingImage(null)}
+            productId={product.id}
+          />
+        )}
       </section>
 
       {/* Variants - only on edit */}

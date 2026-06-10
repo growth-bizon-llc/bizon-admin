@@ -39,18 +39,10 @@ export default function StoreForm({ store, onSubmit, loading }: StoreFormProps) 
       locale: store.locale,
       active: store.active,
       tax_rate: store.tax_rate ?? 0,
-      settings: JSON.stringify(store.settings || {}, null, 2),
     });
   }, [store, reset]);
 
   const handleFormSubmit = (data: StoreFormData) => {
-    let settings: Record<string, unknown> = {};
-    try {
-      settings = data.settings ? JSON.parse(data.settings) : {};
-    } catch {
-      // keep empty
-    }
-
     onSubmit({
       name: data.name,
       description: data.description,
@@ -60,7 +52,6 @@ export default function StoreForm({ store, onSubmit, loading }: StoreFormProps) 
       locale: data.locale,
       active: data.active,
       tax_rate: data.tax_rate,
-      settings,
     });
   };
 
@@ -103,12 +94,6 @@ export default function StoreForm({ store, onSubmit, loading }: StoreFormProps) 
           render={({ field }) => (
             <Toggle label="Active" enabled={field.value ?? true} onChange={field.onChange} />
           )}
-        />
-        <Textarea
-          id="settings"
-          label="Settings (JSON)"
-          {...register("settings")}
-          rows={6}
         />
       </div>
       <div className="flex justify-end">

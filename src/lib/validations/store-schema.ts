@@ -9,7 +9,6 @@ export const storeSchema = z.object({
   locale: z.string().min(1, "Locale is required"),
   active: z.boolean().optional(),
   tax_rate: z.number().min(0).max(100).optional(),
-  settings: z.string().optional(),
 });
 
 export type StoreFormData = z.infer<typeof storeSchema>;
