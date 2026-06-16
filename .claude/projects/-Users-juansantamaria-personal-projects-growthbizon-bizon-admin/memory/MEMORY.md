@@ -1,0 +1,1 @@
+- [Bizon Admin Overview](project_overview.md) — Next.js 16 e-commerce admin panel, Rails API backend, TanStack Query + Zustand + Zod stack

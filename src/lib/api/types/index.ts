@@ -93,6 +93,7 @@ export interface ProductList {
   compare_at_price: Money | null;
   category_name: string | null;
   variants_count: number;
+  primary_image_url: string | null;
 }
 
 export interface Product {

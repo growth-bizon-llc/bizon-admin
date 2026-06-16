@@ -92,29 +92,29 @@ function SortableImageCard({ image, onDelete, onEditAltText }: SortableImageCard
         )}
       </div>
 
-      {/* Drag handle - top right */}
+      {/* Drag handle - top right, z-20 to stay above overlay */}
       <button
         type="button"
-        className="absolute top-2 right-2 cursor-grab rounded-md bg-white/80 p-1 text-gray-500 shadow-sm hover:bg-white hover:text-gray-700 active:cursor-grabbing"
+        className="absolute top-2 right-2 z-20 cursor-grab rounded-md bg-white/80 p-1 text-gray-500 shadow-sm hover:bg-white hover:text-gray-700 active:cursor-grabbing"
         {...attributes}
         {...listeners}
       >
         <Bars3Icon className="h-4 w-4" />
       </button>
 
-      {/* Hover overlay with actions */}
-      <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Hover overlay with actions - pointer-events-none so drag handle works */}
+      <div className="absolute inset-0 z-10 flex items-center justify-center gap-2 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
         <button
           type="button"
           onClick={() => onEditAltText(image)}
-          className="rounded-md bg-white p-2 text-indigo-600 shadow-sm hover:bg-indigo-50 transition-colors"
+          className="rounded-md bg-white p-2 text-indigo-600 shadow-sm hover:bg-indigo-50 transition-colors pointer-events-auto"
         >
           <PencilSquareIcon className="h-5 w-5" />
         </button>
         <button
           type="button"
           onClick={() => onDelete(image.id)}
-          className="rounded-md bg-white p-2 text-red-600 shadow-sm hover:bg-red-50 transition-colors"
+          className="rounded-md bg-white p-2 text-red-600 shadow-sm hover:bg-red-50 transition-colors pointer-events-auto"
         >
           <TrashIcon className="h-5 w-5" />
         </button>

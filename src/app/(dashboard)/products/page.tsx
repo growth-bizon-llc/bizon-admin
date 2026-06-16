@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createColumnHelper } from "@tanstack/react-table";
 import toast from "react-hot-toast";
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, TrashIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import { useProducts, useDeleteProduct } from "@/lib/api/hooks/use-products";
 import { useCategories } from "@/lib/api/hooks/use-categories";
 import { usePermissions } from "@/lib/hooks/use-permissions";
@@ -42,6 +42,20 @@ export default function ProductsPage() {
   const { canDeleteProducts } = usePermissions();
 
   const columns = [
+    columnHelper.accessor("primary_image_url", {
+      header: "",
+      cell: (info) => {
+        const url = info.getValue();
+        return url ? (
+          <img src={url} alt="" className="h-10 w-10 rounded object-cover" />
+        ) : (
+          <div className="h-10 w-10 rounded bg-gray-100 flex items-center justify-center">
+            <PhotoIcon className="h-5 w-5 text-gray-400" />
+          </div>
+        );
+      },
+      size: 56,
+    }),
     columnHelper.accessor("name", { header: "Name" }),
     columnHelper.accessor("sku", { header: "SKU" }),
     columnHelper.accessor("base_price", {

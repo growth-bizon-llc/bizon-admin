@@ -7,10 +7,7 @@ export const productSchema = z.object({
   sku: z.string().optional(),
   barcode: z.string().optional(),
   base_price: z.number().min(0, "Price must be 0 or greater"),
-  compare_at_price: z.preprocess(
-    (val) => (typeof val === "number" && isNaN(val) ? "" : val),
-    z.number().min(0).optional().or(z.literal(""))
-  ),
+  compare_at_price: z.union([z.number().min(0), z.literal("")]).optional(),
   status: z.enum(["draft", "active", "archived"]),
   featured: z.boolean().optional(),
   category_id: z.union([z.number(), z.string(), z.null()]).optional(),
