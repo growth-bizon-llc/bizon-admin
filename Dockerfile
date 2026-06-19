@@ -9,7 +9,9 @@ RUN npm ci --only=production=false
 # Copy source
 COPY . .
 
-# Build
+# Build - NEXT_PUBLIC_* vars must be set at build time
+ARG NEXT_PUBLIC_API_URL=https://api.growthbizon.com/api/v1
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
